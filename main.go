@@ -9,16 +9,16 @@ import (
 )
 
 func main() {
-    // Load config
-    cfg := config.LoadConfig()
+	// Load config
+	cfg := config.LoadConfig()
 
-    // Connect DB
-    mysql.ConnectMySQL(cfg)
+	// Connect DB
+	mysql.ConnectMySQL(cfg)
 
-    // Setup Router
-    r := gin.Default()
-    router.InitRouter(r)
+	// Setup Router
+	r := gin.Default()
+	router.InitRouter(r)
 
-    // Start server
-    r.Run(":8080")
+	// Start server
+	r.Run(":8080")
 }
