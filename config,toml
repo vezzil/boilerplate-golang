@@ -1,0 +1,16 @@
+# config.toml
+
+[app]
+name = "Boilerplate Golang"
+port = 8080
+env = "development"
+
+[database]
+host = "127.0.0.1"
+port = 3306
+user = "root"
+password = "your_password"
+name = "boilerplate_db"
+charset = "utf8mb4"
+parseTime = true
+loc = "Local"

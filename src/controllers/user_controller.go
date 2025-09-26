@@ -4,24 +4,24 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"go-mvcs-boilerplate/models"
-	"go-mvcs-boilerplate/services"
-	"go-mvcs-boilerplate/utils"
+	"boilerplate-golang/src/entity"
+	"boilerplate-golang/src/services"
+	"boilerplate-golang/src/tools"
 )
 
 func GetUsers(c *gin.Context) {
 	users, err := services.GetAllUsers()
 	if err != nil {
-		utils.ErrorResponse(c, http.StatusInternalServerError, "Failed to fetch users")
+		tools.ErrorResponse(c, http.StatusInternalServerError, "Failed to fetch users")
 		return
 	}
-	utils.SuccessResponse(c, users)
+	tools.SuccessResponse(c, users)
 }
 
 func CreateUser(c *gin.Context) {
-	var user models.User
+	var user entity.User
 	if err := c.ShouldBindJSON(&user); err != nil {
-		utils.ErrorResponse(c, http.StatusBadRequest, "Invalid input")
+		tools.ErrorResponse(c, http.StatusBadRequest, "Invalid input")
 		return
 	}
 

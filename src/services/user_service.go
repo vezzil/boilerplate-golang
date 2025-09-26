@@ -1,17 +1,17 @@
 package services
 
 import (
-    "go-mvcs-boilerplate/mysqldb"
-    "go-mvcs-boilerplate/models"
+    "boilerplate-golang/mysql"
+    "boilerplate-golang/src/entity"
 )
 
-func GetAllUsers() ([]models.User, error) {
-    var users []models.User
+func GetAllUsers() ([]entity.User, error) {
+    var users []entity.User
     result := mysqldb.DB.Find(&users)
     return users, result.Error
 }
 
-func CreateUser(user models.User) (models.User, error) {
+func CreateUser(user entity.User) (entity.User, error) {
     result := mysqldb.DB.Create(&user)
     return user, result.Error
 }

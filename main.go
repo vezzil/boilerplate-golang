@@ -1,10 +1,11 @@
 package main
 
 import (
-    "github.com/gin-gonic/gin"
-    "go-mvcs-boilerplate/config"
-    "go-mvcs-boilerplate/mysqldb"
-    "go-mvcs-boilerplate/routes"
+	"boilerplate-golang/config"
+	"boilerplate-golang/mysql"
+	"boilerplate-golang/src/router"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -12,11 +13,11 @@ func main() {
     cfg := config.LoadConfig()
 
     // Connect DB
-    mysqldb.ConnectMySQL(cfg)
+    mysql.ConnectMySQL(cfg)
 
     // Setup Router
     r := gin.Default()
-    routes.RegisterRoutes(r)
+    router.InitRouter(r)
 
     // Start server
     r.Run(":8080")
