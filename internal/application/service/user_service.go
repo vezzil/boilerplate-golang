@@ -6,8 +6,8 @@ import (
 
 	"gorm.io/gorm"
 
-	"boilerplate-golang/internal/entity"
-	"boilerplate-golang/internal/manager/dbmanager"
+	"boilerplate-golang/internal/application/entity"
+	"boilerplate-golang/internal/infrastructure/dbmanager"
 )
 
 type userService struct {

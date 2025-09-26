@@ -1,7 +1,7 @@
 package service
 
 import (
-	"boilerplate-golang/internal/entity"
+	"boilerplate-golang/internal/application/entity"
 )
 
 // UserService defines the interface for user-related business logic

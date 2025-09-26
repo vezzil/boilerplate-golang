@@ -8,8 +8,8 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 
-	"boilerplate-golang/internal/config"
-	"boilerplate-golang/internal/entity"
+	"boilerplate-golang/internal/infrastructure/config"
+	"boilerplate-golang/internal/application/entity"
 )
 
 var db *gorm.DB

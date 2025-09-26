@@ -6,9 +6,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"boilerplate-golang/internal/dto"
-	"boilerplate-golang/internal/entity"
-	"boilerplate-golang/internal/service"
+	"boilerplate-golang/internal/application/dto"
+	"boilerplate-golang/internal/application/entity"
+	"boilerplate-golang/internal/application/service"
 	"boilerplate-golang/pkg/response"
 )
 

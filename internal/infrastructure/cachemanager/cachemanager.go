@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/redis/go-redis/v9"
-	"boilerplate-golang/internal/config"
+	"boilerplate-golang/internal/infrastructure/config"
 )
 
 var rdb *redis.Client
