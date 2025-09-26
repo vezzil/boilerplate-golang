@@ -1,24 +1,31 @@
 package main
 
 import (
-	"boilerplate-golang/config"
-	"boilerplate-golang/mysql"
-	"boilerplate-golang/src/router"
-
-	"github.com/gin-gonic/gin"
+	"fmt"
+	"boilerplate-golang/internal/config"
+	"boilerplate-golang/internal/manager/dbmanager"
+	"boilerplate-golang/internal/manager/cachemanager"
+	"boilerplate-golang/internal/manager/cronmanager"
+	"boilerplate-golang/internal/server/httpserver"
+	"boilerplate-golang/internal/router"
 )
 
 func main() {
-	// Load config
-	cfg := config.LoadConfig()
+	// Load configuration
+	cfg := config.Load()
 
-	// Connect DB
-	mysql.ConnectMySQL(cfg)
+	// Initialize infrastructure managers
+	dbmanager.Init()
+	cachemanager.Init()
+	cronmanager.Init()
 
-	// Setup Router
-	r := gin.Default()
-	router.InitRouter(r)
+	// Create HTTP server (gin.Engine)
+	r := httpserver.New()
+
+	// Register application routes
+	router.Register(r)
 
 	// Start server
-	r.Run(":8080")
+	addr := fmt.Sprintf(":%d", cfg.App.Port)
+	_ = r.Run(addr)
 }
