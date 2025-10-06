@@ -26,6 +26,20 @@ type AppConfig struct {
 		Loc       string
 		Timeout   string
 	}
+	JWT struct {
+		Secret   string        `mapstructure:"secret"`
+		Issuer   string        `mapstructure:"issuer"`
+		ExpireIn time.Duration `mapstructure:"expire_in"`
+	} `mapstructure:"jwt"`
+	Stripe struct {
+		APIKey         string `mapstructure:"api_key"`
+		WebhookSecret  string `mapstructure:"webhook_secret"`
+		SuccessURL     string `mapstructure:"success_url"`
+		CancelURL      string `mapstructure:"cancel_url"`
+		DefaultCurrency string `mapstructure:"default_currency"`
+		TestMode       bool   `mapstructure:"test_mode"`
+		WebhookPath    string `mapstructure:"webhook_path"`
+	} `mapstructure:"stripe"`
 	Redis struct {
 		Host     string
 		Port     int
@@ -39,9 +53,6 @@ type AppConfig struct {
 	Log struct {
 		Level string
 		File  string
-	}
-	CORS struct {
-		AllowedOrigins []string
 	}
 }
 

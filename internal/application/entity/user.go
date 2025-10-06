@@ -8,16 +8,17 @@ import (
 
 // User represents a user record in the database.
 type User struct {
-	ID        uint           `gorm:"primaryKey" json:"id"`
-	Username  string         `gorm:"size:50;uniqueIndex;not null" json:"username"`
-	Email     string         `gorm:"size:100;uniqueIndex;not null" json:"email"`
-	Password  string         `gorm:"size:255;not null" json:"-"` // - means don't include in JSON
-	FullName  string         `gorm:"size:100" json:"full_name,omitempty"`
-	IsActive  bool           `gorm:"default:true" json:"is_active"`
-	LastLogin *time.Time     `json:"last_login,omitempty"`
-	CreatedAt time.Time      `json:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at"`
-	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"` // Soft delete
+	ID        string         `json:"id" gorm:"column:id;primaryKey;type:varchar(255);comment:'Primary Key'"`
+	Username  string         `json:"username" gorm:"column:username;type:varchar(50);comment:'username to login'"`
+	Email     string         `json:"email" gorm:"column:email;type:varchar(100);comment:'email to login'"`
+	Password  string         `json:"password" gorm:"column:password;type:varchar(255);comment:'password to login'"`
+	FullName  string         `json:"full_name" gorm:"column:full_name;type:varchar(100);comment:'full name'"`
+	IsActive  bool           `json:"is_active" gorm:"column:is_active;type:boolean;comment:'is active'"`
+	IsAdmin   bool           `json:"is_admin" gorm:"column:is_admin;type:boolean;comment:'is admin'"`
+	LastLogin *time.Time     `json:"last_login" gorm:"column:last_login;type:timestamp;comment:'last login'"`
+	CreatedAt time.Time      `json:"created_at" gorm:"column:created_at;type:timestamp;comment:'created at'"`
+	UpdatedAt time.Time      `json:"updated_at" gorm:"column:updated_at;type:timestamp;comment:'updated at'"`
+	DeletedAt gorm.DeletedAt `json:"deleted_at" gorm:"column:deleted_at;type:timestamp;comment:'deleted at'"`
 }
 
 // TableName specifies the table name for the User model
@@ -32,10 +33,8 @@ func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
 		u.CreatedAt = now
 	}
 	u.UpdatedAt = now
-	// Set default values
-	if u.IsActive != false {
-		u.IsActive = true // Default to active
-	}
+	// Set default value for IsActive
+	u.IsActive = true // Default to active
 	return nil
 }
 
@@ -43,22 +42,4 @@ func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
 func (u *User) BeforeUpdate(tx *gorm.DB) (err error) {
 	u.UpdatedAt = time.Now().UTC()
 	return nil
-}
-
-// Sanitize removes sensitive information from the user object
-func (u *User) Sanitize() {
-	u.Password = ""
-}
-
-// ToResponse converts User to UserResponse DTO
-func (u *User) ToResponse() map[string]interface{} {
-	return map[string]interface{}{
-		"id":         u.ID,
-		"username":   u.Username,
-		"email":      u.Email,
-		"full_name":  u.FullName,
-		"is_active":  u.IsActive,
-		"created_at": u.CreatedAt,
-		"updated_at": u.UpdatedAt,
-	}
 }

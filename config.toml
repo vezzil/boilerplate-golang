@@ -4,25 +4,39 @@ port = 8080
 env = "development"
 
 [database]
-# Uncomment and configure these settings to enable database connection
-# host = "localhost"
-# port = 3306
-# user = "root"
-# password = ""
-# name = "boilerplate"
-# charset = "utf8mb4"
-# parse_time = true
-# loc = "Local"
-# timeout = "10s"
+host = "localhost"
+port = 3306
+user = "root"
+password = "root"
+name = "boilerplate-golang"
+charset = "utf8mb4"
+parse_time = true
+loc = "Local"
+timeout = "10s"
 
 [redis]
-# Uncomment and configure these settings to enable Redis connection
-# host = "localhost"
-# port = 6379
-# password = ""
-# db = 0
+host = "localhost"
+port = 6379
+password = ""
+db = 0
 
 [jwt]
 secret_key = "your-secret-key-here"
 access_token_expiry = "15m"
 refresh_token_expiry = "24h"
+
+[stripe]
+  # Stripe API key (test or live)
+  api_key = "your_stripe_secret_key_here"
+  # Webhook secret for verifying webhook signatures
+  webhook_secret = "your_webhook_secret_here"
+  # Success URL for Stripe Checkout
+  success_url = "http://localhost:3000/success"
+  # Cancel URL for Stripe Checkout
+  cancel_url = "http://localhost:3000/cancel"
+  # Currency code (e.g., USD, EUR, GBP)
+  default_currency = "USD"
+  # Enable test mode (true for test mode, false for live mode)
+  test_mode = true
+  # Webhook endpoint pathrr
+  webhook_path = "/api/webhooks/stripe"

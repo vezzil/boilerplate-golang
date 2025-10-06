@@ -6,12 +6,14 @@ import (
 	"log"
 	"time"
 
-	"github.com/redis/go-redis/v9"
 	"boilerplate-golang/internal/infrastructure/config"
+
+	"github.com/redis/go-redis/v9"
 )
 
 var rdb *redis.Client
 var ctx = context.Background()
+
 // Init initializes the Redis client using config values.
 // Redis connection is optional and will log a warning if it fails.
 func Init() {
@@ -36,7 +38,7 @@ func Init() {
 	// Ping to ensure connection works; log warning if it fails
 	ctx, cancel := context.WithTimeout(ctx, 2*time.Second)
 	defer cancel()
-	
+
 	if _, err := rdb.Ping(ctx).Result(); err != nil {
 		log.Printf("Warning: Failed to ping Redis: %v", err)
 		log.Println("Application will continue to run without Redis cache")
