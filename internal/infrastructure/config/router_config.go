@@ -13,9 +13,9 @@ import (
 func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		allowedOrigins := []string{
-			"http://localhost:3000",    // React default port
-			"http://localhost:3001",    // Alternative React port
-			"http://localhost:5173",    // Vite default port
+			"http://localhost:3000", // React default port
+			"http://localhost:3001", // Alternative React port
+			"http://localhost:5173", // Vite default port
 			"https://your-production-domain.com",
 		}
 
@@ -40,14 +40,12 @@ func CORSMiddleware() gin.HandlerFunc {
 // getWhitelist returns a list of paths that don't require authentication
 func getWhitelist() *list.List {
 	whitelist := list.New()
-	
-	// Auth routes
+
+	// Auth routes (public - no authentication required)
 	whitelist.PushBack("/api/auth/register")
 	whitelist.PushBack("/api/auth/login")
-	whitelist.PushBack("/api/auth/refresh")
-	whitelist.PushBack("/api/auth/password-reset/request")
-	whitelist.PushBack("/api/auth/password-reset/verify")
-	whitelist.PushBack("/api/auth/password-reset/confirm")
+	whitelist.PushBack("/api/auth/forgot-password")
+	whitelist.PushBack("/api/auth/reset-password")
 
 	// Public product routes
 	whitelist.PushBack("/api/products")
@@ -74,7 +72,7 @@ func getWhitelist() *list.List {
 // AuthMiddleware handles JWT authentication
 func AuthMiddleware() gin.HandlerFunc {
 	whitelist := getWhitelist()
-	
+
 	return func(c *gin.Context) {
 		// Skip authentication for whitelisted routes
 		for e := whitelist.Front(); e != nil; e = e.Next() {
@@ -108,7 +106,9 @@ func AuthMiddleware() gin.HandlerFunc {
 		}
 
 		// Add user info to context
-		c.Set("userID", claims.UserID)
+		c.Set("user_id", claims.UserID)
+		c.Set("organization_id", claims.OrganizationID)
+		c.Set("role", claims.Role)
 		c.Next()
 	}
 }
@@ -116,15 +116,15 @@ func AuthMiddleware() gin.HandlerFunc {
 // AdminMiddleware checks if the user has admin privileges
 func AdminMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		userID, exists := c.Get("userID")
+		role, exists := c.Get("role")
 		if !exists {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 			return
 		}
 
-		// In a real implementation, you would check if the user has admin role
-		// For now, we'll just check if the userID exists
-		if userID == nil {
+		// Check if user has admin or super_admin role
+		userRole := role.(string)
+		if userRole != "admin" && userRole != "super_admin" {
 			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"error": "Admin access required"})
 			return
 		}
@@ -140,7 +140,7 @@ func RecoveryMiddleware() gin.HandlerFunc {
 			if r := recover(); r != nil {
 				// Log the error
 				// logger.Error("Recovered from panic", zap.Any("error", r))
-				
+
 				// Return a 500 error
 				c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 					"error": "Internal server error",

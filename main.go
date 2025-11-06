@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"boilerplate-golang/internal/application/router"
-	"boilerplate-golang/internal/infrastructure/cachemanager"
+	"boilerplate-golang/internal/infrastructure/redismanager"
 	"boilerplate-golang/internal/infrastructure/config"
 	"boilerplate-golang/internal/infrastructure/cronmanager"
 	"boilerplate-golang/internal/infrastructure/dbmanager"

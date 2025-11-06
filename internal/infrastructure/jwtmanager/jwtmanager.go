@@ -9,14 +9,16 @@ import (
 // Manager issues and validates JWT tokens. This is a minimal implementation
 // that can be swapped for another provider later.
 type Manager struct {
-	Secret     []byte
-	Issuer     string
-	ExpireIn   time.Duration
+	Secret   []byte
+	Issuer   string
+	ExpireIn time.Duration
 }
 
 // Claims embeds RegisteredClaims with custom fields if needed.
 type Claims struct {
-	UserID uint `json:"uid"`
+	UserID         string `json:"uid"`
+	OrganizationID string `json:"org_id"`
+	Role           string `json:"role"`
 	jwt.RegisteredClaims
 }
 
@@ -26,9 +28,11 @@ func New(secret, issuer string, expireIn time.Duration) *Manager {
 }
 
 // Sign creates a signed JWT string.
-func (m *Manager) Sign(userID uint) (string, error) {
+func (m *Manager) Sign(userID, organizationID, role string) (string, error) {
 	claims := &Claims{
-		UserID: userID,
+		UserID:         userID,
+		OrganizationID: organizationID,
+		Role:           role,
 		RegisteredClaims: jwt.RegisteredClaims{
 			Issuer:    m.Issuer,
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(m.ExpireIn)),

@@ -32,13 +32,13 @@ type AppConfig struct {
 		ExpireIn time.Duration `mapstructure:"expire_in"`
 	} `mapstructure:"jwt"`
 	Stripe struct {
-		APIKey         string `mapstructure:"api_key"`
-		WebhookSecret  string `mapstructure:"webhook_secret"`
-		SuccessURL     string `mapstructure:"success_url"`
-		CancelURL      string `mapstructure:"cancel_url"`
+		APIKey          string `mapstructure:"api_key"`
+		WebhookSecret   string `mapstructure:"webhook_secret"`
+		SuccessURL      string `mapstructure:"success_url"`
+		CancelURL       string `mapstructure:"cancel_url"`
 		DefaultCurrency string `mapstructure:"default_currency"`
-		TestMode       bool   `mapstructure:"test_mode"`
-		WebhookPath    string `mapstructure:"webhook_path"`
+		TestMode        bool   `mapstructure:"test_mode"`
+		WebhookPath     string `mapstructure:"webhook_path"`
 	} `mapstructure:"stripe"`
 	Redis struct {
 		Host     string
@@ -54,6 +54,28 @@ type AppConfig struct {
 		Level string
 		File  string
 	}
+	AWS struct {
+		AccessKeyID     string `mapstructure:"access_key_id"`
+		SecretAccessKey string `mapstructure:"secret_access_key"`
+		Region          string `mapstructure:"region"`
+		S3Bucket        string `mapstructure:"s3_bucket"`
+	} `mapstructure:"aws"`
+	AI struct {
+		OpenAI struct {
+			APIKey      string  `mapstructure:"api_key"`
+			BaseURL     string  `mapstructure:"base_url"`
+			Model       string  `mapstructure:"model"`
+			MaxTokens   int     `mapstructure:"max_tokens"`
+			Temperature float64 `mapstructure:"temperature"`
+		} `mapstructure:"openai"`
+		RateLimit struct {
+			RequestsPerMinute int `mapstructure:"requests_per_minute"`
+			RequestsPerHour   int `mapstructure:"requests_per_hour"`
+		} `mapstructure:"rate_limit"`
+		Timeout    time.Duration `mapstructure:"timeout"`
+		RetryCount int           `mapstructure:"retry_count"`
+		Enabled    bool          `mapstructure:"enabled"`
+	} `mapstructure:"ai"`
 }
 
 var cfg AppConfig

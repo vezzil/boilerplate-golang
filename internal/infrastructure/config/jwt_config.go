@@ -16,7 +16,7 @@ import (
 var (
 	JWT            *jwtmanager.Manager
 	RefreshJWT     *jwtmanager.Manager
-	RefreshSecrets = make(map[uint]string) // In production, use Redis or database
+	RefreshSecrets = make(map[string]string) // In production, use Redis or database
 )
 
 // InitJWT initializes the JWT manager with configuration
@@ -55,15 +55,15 @@ type TokenPair struct {
 }
 
 // GenerateTokenPair generates a new access token and refresh token for a user
-func GenerateTokenPair(userID uint) (*TokenPair, error) {
+func GenerateTokenPair(userID, organizationID, role string) (*TokenPair, error) {
 	// Generate access token
-	accessToken, expiresAt, err := generateToken(userID, JWT)
+	accessToken, expiresAt, err := generateToken(userID, organizationID, role, JWT)
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate access token: %w", err)
 	}
 
 	// Generate refresh token
-	refreshToken, _, err := generateToken(userID, RefreshJWT)
+	refreshToken, _, err := generateToken(userID, organizationID, role, RefreshJWT)
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate refresh token: %w", err)
 	}
@@ -85,7 +85,7 @@ func GenerateTokenPair(userID uint) (*TokenPair, error) {
 }
 
 // VerifyRefreshToken verifies a refresh token and returns a new token pair
-func VerifyRefreshToken(userID uint, refreshToken string) (*TokenPair, error) {
+func VerifyRefreshToken(userID, organizationID, role, refreshToken string) (*TokenPair, error) {
 	// In production, verify the refresh token against the stored hash in Redis/database
 	storedHash, exists := RefreshSecrets[userID]
 	if !exists {
@@ -98,17 +98,17 @@ func VerifyRefreshToken(userID uint, refreshToken string) (*TokenPair, error) {
 	}
 
 	// Generate new token pair
-	return GenerateTokenPair(userID)
+	return GenerateTokenPair(userID, organizationID, role)
 }
 
 // InvalidateRefreshToken removes a user's refresh token
-func InvalidateRefreshToken(userID uint) {
+func InvalidateRefreshToken(userID string) {
 	delete(RefreshSecrets, userID)
 }
 
 // generateToken is a helper function to generate a JWT token
-func generateToken(userID uint, manager *jwtmanager.Manager) (string, time.Time, error) {
-	tokenString, err := manager.Sign(userID)
+func generateToken(userID, organizationID, role string, manager *jwtmanager.Manager) (string, time.Time, error) {
+	tokenString, err := manager.Sign(userID, organizationID, role)
 	if err != nil {
 		return "", time.Time{}, err
 	}
